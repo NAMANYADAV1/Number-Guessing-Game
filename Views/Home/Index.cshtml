@@ -1,0 +1,47 @@
+@model NumberGuessingGame.Models.GameViewModel
+@{
+    ViewData["Title"] = "Number Guessing Game";
+}
+
+<section class="game-shell" aria-labelledby="game-title">
+    <div class="game-card">
+        <div class="game-heading">
+            <div class="game-icon" aria-hidden="true">?</div>
+            <p class="eyebrow">A little game of intuition</p>
+            <h1 id="game-title">Can you guess it?</h1>
+            <p class="game-description">I'm thinking of a number between <strong>1</strong> and <strong>100</strong>.</p>
+        </div>
+
+        <div class="game-stats" aria-label="Game statistics">
+            <span class="stat-label">Your attempts</span>
+            <span class="stat-value">@Model.Attempts</span>
+        </div>
+
+        <div class="feedback @(Model.HasWon ? "feedback-success" : "")" role="status" aria-live="polite">
+            <span class="feedback-mark" aria-hidden="true">@(Model.HasWon ? "✓" : "✦")</span>
+            <span>@Model.Feedback</span>
+        </div>
+
+        @if (!Model.HasWon)
+        {
+            <form asp-controller="Home" asp-action="Guess" method="post" class="guess-form">
+                <label asp-for="Input.Guess">Your guess</label>
+                <div class="guess-controls">
+                    <input asp-for="Input.Guess" class="guess-input" type="number" min="1" max="100"
+                           placeholder="e.g. 42" autocomplete="off" autofocus />
+                    <button type="submit" class="guess-button">Guess <span aria-hidden="true">→</span></button>
+                </div>
+                <span asp-validation-for="Input.Guess" class="validation-message"></span>
+            </form>
+        }
+
+        <form asp-controller="Home" asp-action="NewGame" method="post" class="restart-form">
+            <button type="submit" class="restart-button">↻ <span>Start a new game</span></button>
+        </form>
+    </div>
+    <p class="game-note">No pressure. The number isn't going anywhere.</p>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
